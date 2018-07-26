@@ -1,0 +1,51 @@
+<?php
+/**
+ * Implements hook_permission().
+ * create a new permission at the people page
+ */
+function HelloPage_permission() {
+    return array(
+        // 'administer my module' will be the permission inside of the people page
+        'administer my module' => array(
+            'title' => t('Administer hello module'),
+            'description' => t('Perform administration tasks for hello module.'),
+        ),
+    );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function HelloPage_menu() {
+    // 'hello' will be the routing path
+    $items['hello'] = array(
+        'title' => 'Hello world!',
+        // call the below function
+        'page callback' => 'HelloPage_page',
+        'access callback' => 'user_access',
+        // access agruments using either 'Administer hello module' or 'administer my module' will be fine
+        'access arguments' => array('administer my module'),
+        // 允許登入與未登入
+        //'access callback' => TRUE,
+        // 單獨使用直接判斷有沒有登入，沒登入什麼事都做不了
+        //'access callback' => 'user_is_logged_in',
+    );
+
+    return $items;
+}
+
+/**
+ * Page callback for /hello.
+ */
+function HelloPage_page() {
+//    尋找使用者的uid存不存在就知道有沒有登入, 配合'access callback' => TRUE,
+//    global $user;
+//    if($user->uid)
+
+//        var_dump($GLOBALS['user']->roles);
+
+        return 'Hello world from callback function! Welcome User/ Admin';
+//    else
+//        return 'plz login';
+}
+

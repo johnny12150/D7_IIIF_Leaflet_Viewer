@@ -1,0 +1,58 @@
+/*處理Drupal原生css 與viewer客製化css 互相衝突的問題*/
+/*fail z index*/
+#overlay {
+    z-index: 10000;
+}
+
+#confirmBox .button{
+    border-radius: 0px;
+}
+
+/*.mapid {*/
+    /*height: 400px;*/
+    /*width: 300px;*/
+/*}*/
+
+@media (min-width: 851px){
+    #sidebar-first {
+        width: 24% !important; /*要跟 .mapid 分配%數 */
+        margin-left: -7% !important; /*!important 可以協助css overridden */
+    }
+}
+
+.mapid {
+    height: 600px;
+    width: 78%;
+    float: right;
+    margin-right: -5%;
+}
+
+textarea {
+    color: black;
+}
+
+.leaflet-top {
+    top: 9%;
+}
+
+.leaflet-right {
+    right: 9%;
+}
+
+.leaflet-left {
+    left: 9%;
+}
+
+.leaflet-bottom {
+    bottom: 9%;
+}
+
+/*both z-index fail*/
+.leaflet-control {
+    z-index: 580;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+    z-index: 590;
+}

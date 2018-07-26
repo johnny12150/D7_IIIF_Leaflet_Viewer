@@ -1,0 +1,124 @@
+<?php
+
+function iiifViewer_init()
+{
+    // js不能一部分放在init 一部分用 add library 會有先後順序導致錯誤
+//    drupal_add_js(drupal_get_path('module', 'iiifViewer') . '/src/js/d3.min.js');
+//    drupal_add_js(drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet.js');
+//    drupal_add_js(drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet.label.js');
+//    drupal_add_js(drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet.zoomhome.min.js');
+//    drupal_add_js(drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet-iiif.js');
+
+//    drupal_add_js(drupal_get_path('module', 'iiifViewer').'/src/js/show.js');
+
+//    drupal_add_js(drupal_get_path('module', 'iiifViewer') . '/src/js/tinymce.min.js');
+
+    // fail
+//    drupal_add_js('//cdn.tinymce.com/4/tinymce.min.js', array('type' => 'external', 'scope' => 'footer'));
+
+
+    // css順序有差且上面的css會比下面add library晚加入檔案(與js相反)
+    drupal_add_css(drupal_get_path('module', 'iiifViewer') . '/src/css/leaflet.css');
+    drupal_add_css(drupal_get_path('module', 'iiifViewer') . '/src/css/leaflet.draw.css');
+    drupal_add_css(drupal_get_path('module', 'iiifViewer') . '/src/css/leaflet.label.css');
+    drupal_add_css(drupal_get_path('module', 'iiifViewer') . '/src/css/leaflet.zoomhome.css');
+    drupal_add_css('http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', array('type' => 'external'));
+    drupal_add_css(drupal_get_path('module', 'iiifViewer') . '/src/css/coordinate.css');
+
+
+}
+
+function iiifViewer_library()
+{
+    $libraries['show_anno'] = array(
+        'title' => 'Show annotations',
+        'website' => 'http://172.16.100.19:8884/iiif',
+        'version' => '1.0',
+        'js' => array(
+            // common
+            drupal_get_path('module', 'iiifViewer') . '/src/js/d3.min.js' => array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet.js' => array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet.label.js' => array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet.zoomhome.min.js' => array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet-iiif.js' => array(),
+
+            drupal_get_path('module', 'iiifViewer') . '/src/js/show.js' => array(),
+
+        ),
+        'css' => array(
+            drupal_get_path('module', 'iiifViewer') . '/src/css/show.css' => array(),
+        ),
+    );
+
+    $libraries['manage_anno'] = array(
+        'title' => 'Show annotations',
+        'website' => 'http://172.16.100.19:8884/iiif',
+        'version' => '1.0',
+        'js' => array(
+            // common
+            drupal_get_path('module', 'iiifViewer') . '/src/js/d3.min.js' => array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet.js' => array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet.draw.js' => array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet.label.js' => array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet.zoomhome.min.js' => array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet-iiif.js' => array(),
+
+            // for showing viewer
+            drupal_get_path('module', 'iiifViewer') . '/src/js/tinymce.min.js'=> array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/js/api.js' => array(),
+//            drupal_get_path('module', 'iiifViewer') . '/src/js/leaflet-iiif.js' => array(),
+        ),
+        'css' => array(
+            drupal_get_path('module', 'iiifViewer') . '/src/css/api.css' => array(),
+            drupal_get_path('module', 'iiifViewer') . '/src/css/popout.css' => array(),
+//            drupal_get_path('module', 'iiifViewer') . '/src/css/coordinate.css'=> array(),
+        ),
+    );
+
+    return $libraries;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function iiifViewer_theme($existing, $type, $theme, $path)
+{
+    $theme = array();
+    $theme['iiifViewer_anno_theme'] = array(
+        'template' => 'iiifViewer',
+        'path' => drupal_get_path('module', 'iiifViewer') . '/theme',
+    );
+    $theme['iiifViewer_show_theme'] = array(
+        'template' => 'show',
+        'path' => drupal_get_path('module', 'iiifViewer') . '/theme',
+    );
+    return $theme;
+}
+
+function iiifViewer_menu()
+{
+    // 'hello' will be the routing path
+    $items['iiif'] = array(
+        'title' => 'IIIF',
+        // call the below function
+        'page callback' => 'iiifViewer_page',
+        // 允許登入與未登入
+        'access callback' => TRUE,
+
+    );
+
+    return $items;
+}
+
+function iiifViewer_page()
+{
+    global $user;
+    if ($user->uid) {
+        drupal_add_library('iiifViewer','manage_anno');
+        return theme('iiifViewer_anno_theme');
+    } else {
+        drupal_add_library('iiifViewer', 'show_anno');
+        return theme('iiifViewer_show_theme');
+    }
+
+}

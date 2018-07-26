@@ -1,0 +1,3 @@
+name = try D7
+description = A module for trying to learn D7 module development.
+core = 7.x

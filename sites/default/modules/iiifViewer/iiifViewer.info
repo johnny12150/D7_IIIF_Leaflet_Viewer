@@ -1,0 +1,4 @@
+name = iiifViewer
+description = A module for adding iiif-leaflet viewer to your page.
+core = 7.x
+scripts[]=try.js

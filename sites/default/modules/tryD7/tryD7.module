@@ -1,0 +1,30 @@
+<?php
+/**
+ * hook_block_info( )
+ */
+
+function tryD7_block_info() {
+    $blocks['D7block'] = array(
+        // info will be the block's name
+        'info' => 'a new block of trying',
+    );
+    return $blocks;
+}
+
+/**
+ * hook_block_view( )
+ * @param string $delta
+ */
+
+function tryD7_block_view($delta = '') {
+    $block = array();
+
+    switch ($delta) {
+        case 'D7block':
+            // texts that will be shown in the block
+            $block['subject'] = t('tryD7 subject');
+            $block['content'] = t('D7 title test');
+            break;
+    }
+    return $block;
+}
